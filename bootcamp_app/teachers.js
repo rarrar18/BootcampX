@@ -5,11 +5,34 @@ const pool = new Pool({
   user: 'vagrant',
   password: '123',
   host: 'localhost',
-  database: 'bootcampx'
-});
-// Get the name of all teachers who performed an assistance request during a cohort
-// DISTINCT ensures there are no repeats of the teachers' names in the results list
-// Accept the cohort name as CLI input from the user (eg. node teachers.js MAY07)
+  database: 'bootcampx',
+  port: 5432
+})
+
+// Connect to the database using a callback
+// pool.connect((err) => {
+//   if (err) return console.log(err);
+// })
+// Submit a query using a callback
+// pool.query('SELECT * FROM teachers;', (err, res) => {
+//   console.log('error: ', err);
+//   console.log('res: ', res.rows);
+// })
+
+// Connect to the database using promises
+pool.connect()
+  .then(() => {
+    console.log("Successful connection!");
+  })
+  .catch(e => {
+    console.log('Connection error: ', e.message);
+  })
+  .finally(() => {
+    console.log("Finally connected!");
+  });
+
+// Submit query to get the name of all teachers who performed an assistance request during a cohort
+// Accept cohort name as CLI input (eg. node teachers.js MAY07)
 pool.query(`
 SELECT DISTINCT teachers.name as teacher, cohorts.name as cohort
 FROM teachers
